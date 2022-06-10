@@ -1,18 +1,19 @@
 import socket
 import threading
-'''
-accept() aceita uma conexão do cliente
-bind()  associa meu servidor a um endereço 
-close() fecha
-connect() faz conexão do cliente a um endereço
-listen() escuta
-recv(tamahp do pacote), passa a receber a mensagem
-'''
+
+# '''
+# accept() aceita uma conexão do cliente
+# bind()  associa meu servidor a um endereço 
+# close() fecha
+# connect() faz conexão do cliente a um endereço
+# listen() escuta
+# recv(tamahp do pacote), passa a receber a mensagem
+# '''
 
 # address = ('localhost', 50000)
 HOST = '127.0.0.1'
-PORT = 1234
-limite =5
+PORT = 40000
+limite = 5
 lista_clientes = [] #coloca nomes do clientes conectados
 
 def prox_mensagem(cliente, nome):
@@ -20,11 +21,13 @@ def prox_mensagem(cliente, nome):
 
         mensagem = cliente.recv(2048).decode('utf-8')
         if mensagem !='':
+
             mensagem_final = nome + '~' + mensagem
             enviar_mensagem(mensagem_final)
 
         else:
-            print("A mensagem foi enviada para o cliente {} é vazia".format(nome))
+            print(f"A mensagem enviada para o cliente {nome} é vazia")
+
 #função envia mensagem para apenas um cliente      
 def mensagem_cliente(cliente, mensagem):
 
@@ -33,7 +36,7 @@ def mensagem_cliente(cliente, mensagem):
 def enviar_mensagem(mensagem):
     for i in lista_clientes:
 
-        enviar_mensagem(i[1], mensagem)
+        mensagem_cliente(i[1], mensagem)
         
 def manipular_cliente(cliente):
     #servidor vai ouvir a mesangem do cliente
@@ -42,9 +45,12 @@ def manipular_cliente(cliente):
         nome = cliente.recv(2048).decode('utf-8')
         if nome != '':
             lista_clientes.append((nome, cliente))
+            prompt_mensagem = 'SERVIDOR~' + f"{nome} Entrou no Chat"
+            enviar_mensagem(prompt_mensagem )
             break
         else:
-            print("Nome do cliente está vazio: ")
+            print("Nome do cliente está vazio")
+
 
     threading.Thread(target=prox_mensagem, args=(cliente, nome, )).start()
 
@@ -68,4 +74,5 @@ def main():
 
         threading.Thread(target=manipular_cliente, args=(cliente,)).start()
 
-main()
+if __name__ == '__main__':
+    main()
