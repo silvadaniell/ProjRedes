@@ -1,25 +1,28 @@
 import socket
 import threading
-'''
-accept() aceita uma conexão do cliente
-bind()  associa meu servidor a um endereço 
-close() fecha
-connect() faz conexão do cliente a um endereço
-listen() escuta
-recv(tamahp do pacote), passa a receber a mensagem
-'''
+# '''
+# accept() aceita uma conexão do cliente
+# bind()  associa meu servidor a um endereço 
+# close() fecha
+# connect() faz conexão do cliente a um endereço
+# listen() escuta
+# recv(tamahp do pacote), passa a receber a mensagem
+# '''
 
 HOST = '127.0.0.1'
-PORT = 1234
+PORT = 40000
 def msg_servidor(cliente):
     while 1:
         mensagem = cliente.recv(2048).decode('utf-8')
         if mensagem !='':
+            
             nome = mensagem.split("~")[0]
             depois_nome = mensagem.split('~')[1]
-            print("[{}]{} ".format(nome, depois_nome))
+            print(f"[{nome}] {depois_nome} ")
+
         else:
             print("Mensagem recebida do cliente está vazia")
+            break
 
 def enviar_msg_servidor(cliente):
     while 1:
@@ -52,6 +55,7 @@ def main():
         print("Servidor conectado com sucesso")
     except:
         print("Não foi possível veicular o host {} e porta {}".format(HOST, PORT))
+    conexao_servidor(cliente)
 
-
-main()
+if __name__ == '__main__':
+    main()
