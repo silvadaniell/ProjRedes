@@ -10,15 +10,12 @@ import threading
 # recv(tamahp do pacote), passa a receber a mensagem
 # '''
 
-# address = ('localhost', 50000)
-HOST = '127.0.0.1'
-PORT = 40000
+address = ('localhost', 45000)
 limite = 5
 lista_clientes = [] #coloca nomes do clientes conectados
 
 def prox_mensagem(cliente, nome):
     while 1:
-
         mensagem = cliente.recv(2048).decode('utf-8')
         if mensagem !='':
 
@@ -26,13 +23,15 @@ def prox_mensagem(cliente, nome):
             enviar_mensagem(mensagem_final)
 
         else:
+            print('')
             print(f"A mensagem enviada para o cliente {nome} é vazia")
+            break
 
 #função envia mensagem para apenas um cliente      
 def mensagem_cliente(cliente, mensagem):
 
     cliente.sendall(mensagem.encode())
-#função para enviar mensagem para todos q estão conectados
+#função para enviar mensagem para todos que  estão conectados
 def enviar_mensagem(mensagem):
     for i in lista_clientes:
 
@@ -45,13 +44,13 @@ def manipular_cliente(cliente):
         nome = cliente.recv(2048).decode('utf-8')
         if nome != '':
             lista_clientes.append((nome, cliente))
-            prompt_mensagem = 'SERVIDOR~' + f"{nome} Entrou no Chat"
-            enviar_mensagem(prompt_mensagem )
+            usuarioEntra = 'SERVIDOR~' + f"{nome} Entrou no Chat"
+            enviar_mensagem(usuarioEntra)
+
             break
         else:
-            print("Nome do cliente está vazio")
-
-
+            print(">>>> Nome do cliente está vazio")
+            break;
     threading.Thread(target=prox_mensagem, args=(cliente, nome, )).start()
 
 
@@ -61,16 +60,22 @@ def main():
     #Familia de endereço :AF_INET = endereço IPv4/ AF_INET6 - endereço IPv6
     #Tipo de Socket: SOCK_STREAM
     try:
-        servidor.bind((HOST, PORT))
-        print("Foi veicular o host {} e porta {}".format(HOST, PORT))
+        servidor.bind(address)
+        print('='*70)
+        print("\tFoi veicular o host e porta {}".format(address))
+        print('='*70)
+        print('')
     except:
-        print("Não foi possível veicular o host {} e porta {}".format(HOST, PORT))
+        print('='*70)
+        print("\tNão foi possível veicular o host e porta {}".format(address ))
+        print('='*70)
+        print('')
 
     servidor.listen(limite)
   
-    while 1:
+    while True:
         cliente, endereco = servidor.accept()
-        print("Cliente conectado com sucesso {}, {} ".format(endereco[0], endereco[1]))
+        print(">>> Cliente conectado com sucesso {}, {} ".format(endereco[0], endereco[1]))
 
         threading.Thread(target=manipular_cliente, args=(cliente,)).start()
 
