@@ -1,3 +1,4 @@
+
 import socket
 import threading
 # '''
@@ -9,37 +10,35 @@ import threading
 # recv(tamahp do pacote), passa a receber a mensagem
 # '''
 
-HOST = '127.0.0.1'
-PORT = 40000
+address = ('localhost', 45000)
 def msg_servidor(cliente):
-    while 1:
+    while True:
         mensagem = cliente.recv(2048).decode('utf-8')
         if mensagem !='':
-            
             nome = mensagem.split("~")[0]
             depois_nome = mensagem.split('~')[1]
             print(f"[{nome}] {depois_nome} ")
 
         else:
+            print('')
             print("Mensagem recebida do cliente está vazia")
             break
 
 def enviar_msg_servidor(cliente):
-    while 1:
+    while True:
         mensagem = input('Mensagem: ')
         if mensagem != '':
             cliente.sendall(mensagem.encode())
         else:
             print('Mensagem Vazia')
-            exit(0)
+            exit()
 
 def conexao_servidor(cliente):
-
-    nome = input("Digite o nome do usuário: ")
+    nome = input(">>>>> Digite o nome do usuário: ")
     if nome != '':
         cliente.sendall(nome.encode())
     else:
-        print("Nome do usuário não encontrado")
+        print(">>>>> Nome do usuário não encontrado")
         exit(0)
         
     threading.Thread(target=msg_servidor, args=(cliente,)).start()
@@ -51,10 +50,16 @@ def main():
 
     cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        cliente.connect((HOST,PORT))
-        print("Servidor conectado com sucesso")
+        cliente.connect((address))
+        print('='*70)
+        print("\t\tServidor conectado com sucesso")
+        print('='*70)
+        print('\n')
     except:
-        print("Não foi possível veicular o host {} e porta {}".format(HOST, PORT))
+        print('='*70)
+        print("\t\tNão foi possível veicular o host e porta {}".format(address))
+        print('='*70)
+        print('\n')
     conexao_servidor(cliente)
 
 if __name__ == '__main__':
