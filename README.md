@@ -1,6 +1,9 @@
 # Projeto de Redes
-Responsáveis:
+Alunos:
 
 Daniel Silva
 
 Gledson Lima
+
+Passo a passo para rodar a aplicação:
+
